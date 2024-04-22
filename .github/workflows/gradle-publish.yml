@@ -24,6 +24,7 @@ jobs:
         run: ./gradlew build
 
   sonarcloud:
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
@@ -37,11 +38,11 @@ jobs:
           distribution: 'adopt'
 
       - name: Run Gradle build and SonarQube analysis
-        run: ./gradlew sonarqube
+        run: ./gradlew build sonarqube
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   test:
-    needs: build
+    needs: sonarcloud
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
