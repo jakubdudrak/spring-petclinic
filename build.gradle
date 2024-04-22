@@ -50,12 +50,17 @@ dependencies {
   testImplementation 'org.testcontainers:mysql'
   checkstyle 'io.spring.javaformat:spring-javaformat-checkstyle:0.0.41'
   checkstyle 'com.puppycrawl.tools:checkstyle:10.12.5'
+  testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.0')
+  testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.0')
 }
 
-tasks.named('test') {
+test {
   useJUnitPlatform()
-}
 
+  testLogging {
+    events "passed", "failed", "skipped"
+  }
+}
 checkstyle {
   configDirectory = project.file('src/checkstyle')
   configFile = file('src/checkstyle/nohttp-checkstyle.xml')
