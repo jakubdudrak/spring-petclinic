@@ -57,7 +57,10 @@ dependencies {
 
 test {
   useJUnitPlatform()
-
+  reports {
+    junitXml.required = true
+    html.required = false // Optional: disable HTML reports if not needed
+  }
   testLogging {
     events "passed", "failed", "skipped"
   }
