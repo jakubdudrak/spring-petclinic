@@ -24,7 +24,7 @@ jobs:
         run: ./gradlew build
 
   sonarcloud:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
@@ -42,7 +42,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   test:
-    needs: sonarcloud
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
