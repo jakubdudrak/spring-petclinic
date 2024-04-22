@@ -38,7 +38,7 @@ jobs:
           distribution: 'adopt'
 
       - name: Run Gradle build and SonarQube analysis
-        run: ./gradlew build sonarqube
+        run: ./gradlew sonarqube
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   test:
