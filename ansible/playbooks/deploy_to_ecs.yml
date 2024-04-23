@@ -5,27 +5,22 @@
   gather_facts: false
 
   vars:
-    aws_region: 'eu-north-1'
     ecr_repository: 'public.ecr.aws/u7v5w7u1/pet-clinic'
     image_name: 'pet-clinic'
     image_tag: 'latest'
 
   tasks:
     - name: Authenticate Docker to Amazon ECR Public
-      shell: aws ecr-public get-login-password --debug | docker login --username AWS --password-stdin public.ecr.aws/u7v5w7u1/pet-clinic
+      shell: aws ecr-public get-login-password | docker login --username AWS --password-stdin public.ecr.aws
       register: login_output
       failed_when: login_output.rc != 0
-      args:
-        executable: /bin/bash
 
     - name: Build Docker image
       shell: docker build -t {{ image_name }}:{{ image_tag }} .
       args:
-        chdir: /Dockerfile
-      register: build_output
-      failed_when: build_output.rc != 0
+        chdir: /path/to/your/dockerfile  # Ensure this path is correct
 
-    - name: Tag Docker image for ECR
+    - name: Tag Docker image for ECR Public
       shell: docker tag {{ image_name }}:{{ image_tag }} {{ ecr_repository }}:{{ image_tag }}
 
     - name: Push Docker image to Amazon ECR Public
