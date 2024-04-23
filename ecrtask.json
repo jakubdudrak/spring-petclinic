@@ -1,0 +1,23 @@
+{
+  "family": "pet-clinic",
+  "containerDefinitions": [
+    {
+      "name": "web",
+      "image": "339712705537.dkr.ecr.eu-north-1.amazonaws.com/pet-clinic:latest",
+      "essential": true,
+      "memory": 512,
+      "cpu": 256,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80
+        }
+      ]
+    }
+  ],
+  "requiresCompatibilities": ["FARGATE"],
+  "networkMode": "awsvpc",
+  "memory": "1024",
+  "cpu": "512",
+  "executionRoleArn": "arn:aws:iam::339712705537:user/github-actions"
+}
