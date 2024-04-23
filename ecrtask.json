@@ -19,5 +19,5 @@
   "networkMode": "awsvpc",
   "memory": "1024",
   "cpu": "512",
-  "executionRoleArn": "arn:aws:iam::339712705537:user/github-actions"
+  "executionRoleArn": "arn:aws:iam::339712705537:role/POLICY_PET_CLINIC"
 }
