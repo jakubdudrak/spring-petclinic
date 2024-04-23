@@ -157,9 +157,10 @@ jobs:
           uses: docker/build-push-action@v2
           with:
             context: .
-            file: ./Dockerfile
+            file: Dockerfile
             push: true
-            tags: 339712705537.dkr.ecr.eu-north-1.amazonaws.com/pet-clinic:latest  
+            tags: 339712705537.dkr.ecr.eu-north-1.amazonaws.com/pet-clinic:latest
+            load: false
   
         - name: Verify Docker Configuration
           run: docker info
