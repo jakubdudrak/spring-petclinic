@@ -11,15 +11,18 @@
 
   tasks:
     - name: Authenticate Docker to Amazon ECR Public
-      shell: aws ecr-public get-login-password | docker login --username AWS --password-stdin public.ecr.aws
+      shell: |
+        aws ecr-public get-login-password --debug | docker login --username AWS --password-stdin public.ecr.aws
       register: login_output
       failed_when: login_output.rc != 0
+      args:
+        executable: /bin/bash
+
 
     - name: Build Docker image
       shell: docker build -t {{ image_name }}:{{ image_tag }} .
       args:
-        chdir: /path/to/your/dockerfile  # Ensure this path is correct
-
+        chdir: Dockerfile
     - name: Tag Docker image for ECR Public
       shell: docker tag {{ image_name }}:{{ image_tag }} {{ ecr_repository }}:{{ image_tag }}
 
