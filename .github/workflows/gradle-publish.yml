@@ -169,7 +169,7 @@ jobs:
             context: .
             file: Dockerfile
             push: true
-            tags: 339712705537.dkr.ecr.eu-north-1.amazonaws.com/pet-clinic:latest
+            tags: 339712705537.dkr.ecr.eu-north-1.amazonaws.com/pet-clinic
             load: false
   
         - name: Verify Docker Configuration
