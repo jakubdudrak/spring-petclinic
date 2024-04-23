@@ -203,4 +203,4 @@ jobs:
 
       - name: Deploy to ECS
         run: |
-          aws ecs update-service --cluster petclinic --service pet-clinic --task-definition petclinic:1 --desired-count 1
+          aws ecs update-service --cluster petclinic --service pet-clinic --task-definition petclinic --desired-count 1
