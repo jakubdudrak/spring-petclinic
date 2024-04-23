@@ -1,0 +1,45 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Login to Amazon ECR
+      command: aws ecr get-login-password --region {{ aws_region }} | docker login --username AWS --password-stdin {{ ecr_repository }}
+
+    - name: Pull the latest Docker image
+      command: docker pull jakidaboii/spring-petclinic:latest
+
+    - name: Register a new task definition
+      community.aws.ecs_taskdefinition:
+        state: present
+        family: my-application
+        containers:
+          - name: my-container
+            image: jakidaboii/spring-petclinic:latest
+            cpu: 256
+            memory: 512
+            essential: True
+            port_mappings:
+              - container_port: 8080
+                host_port: 8080
+        network_mode: awsvpc
+        execution_role_arn: arn:aws:iam::{{ aws_account_id }}:role/ecsTaskExecutionRole
+        task_role_arn: arn:aws:iam::{{ aws_account_id }}:role/ecsTaskRole
+        requires_compatibilities:
+          - "FARGATE"
+        memory: "512"
+        cpu: "256"
+        aws_region: "{{ aws_region }}"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+      register: taskdef
+
+    - name: Update ECS service
+      community.aws.ecs_service:
+        name: YOUR_SERVICE_NAME
+        cluster: YOUR_CLUSTER_NAME
+        task_definition: "{{ taskdef.taskdefinition.family }}"
+        desired_count: 1
+        aws_region: "{{ aws_region }}"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        state: present
