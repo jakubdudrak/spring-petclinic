@@ -128,4 +128,4 @@ jobs:
 
       - name: Run Ansible playbook
         run: |
-          ansible-playbook deploy_to_ecs.yml --extra-vars "aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }} aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }} aws_region='eu-north-1' aws_account_id='339712705537'"
+          ansible-playbook ansible/playbooks/deploy_to_ecs.yml --extra-vars "aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }} aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }} aws_region='eu-north-1' aws_account_id='339712705537'"
