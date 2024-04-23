@@ -99,6 +99,6 @@ jobs:
       with:
         context: .
         file: Dockerfile
-        tags: jakubdudrak/spring-petclinic
+        tags: jakidaboii/spring-petclinic:latest
         push: true
         load: false
