@@ -3,7 +3,10 @@
   gather_facts: no
   tasks:
     - name: Login to Amazon ECR
-      command: aws ecr get-login-password --region {{ aws_region }} | docker login --username AWS --password-stdin {{ ecr_repository }}
+      shell: |
+        aws ecr get-login-password --region {{ aws_region }} | docker login --username AWS --password-stdin {{ ecr_repository }}
+      args:
+        executable: /bin/bash
 
     - name: Pull the latest Docker image
       command: docker pull jakidaboii/spring-petclinic:latest
