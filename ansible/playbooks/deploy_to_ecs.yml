@@ -1,48 +1,38 @@
 ---
-- hosts: localhost
-  gather_facts: no
+- name: Deploy Docker image to Amazon ECR
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    aws_region: 'eu-north-1'
+    aws_account_id: '339712705537'
+    ecr_repository_name: 'pet-clinic'
+    image_name: 'pet-clinic'
+    image_tag: 'latest'
+
   tasks:
-    - name: Login to Amazon ECR
+    - name: Create ECR repository if it does not exist
+      community.aws.ecr_repository:
+        name: "{{ ecr_repository_name }}"
+        region: "{{ aws_region }}"
+        state: present
+      register: ecr_repo
+
+    - name: Authenticate Docker to Amazon ECR
       shell: |
-        aws ecr get-login-password --region {{ aws_region }} | docker login --username AWS --password-stdin public.ecr.aws/u7v5w7u1/pet-clinic
-      args:
-        executable: /bin/bash
+        aws ecr get-login-password --region {{ aws_region }} | docker login --username AWS --password-stdin {{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com
+      register: login_output
+      failed_when: login_output.rc != 0
 
-    - name: Pull the latest Docker image
-      command: docker pull jakidaboii/spring-petclinic:latest
+    - name: Tag the Docker image for ECR
+      shell: |
+        docker tag {{ image_name }}:{{ image_tag }} {{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com/{{ ecr_repository_name }}:{{ image_tag }}
+      register: tag_output
+      failed_when: tag_output.rc != 0
 
-    - name: Register a new task definition
-      community.aws.ecs_taskdefinition:
-        state: present
-        family: my-application
-        containers:
-          - name: my-container
-            image: jakidaboii/spring-petclinic:latest
-            cpu: 256
-            memory: 512
-            essential: True
-            port_mappings:
-              - container_port: 8080
-                host_port: 8080
-        network_mode: awsvpc
-        execution_role_arn: arn:aws:iam::{{ aws_account_id }}:role/ecsTaskExecutionRole
-        task_role_arn: arn:aws:iam::{{ aws_account_id }}:role/ecsTaskRole
-        requires_compatibilities:
-          - "FARGATE"
-        memory: "512"
-        cpu: "256"
-        aws_region: "{{ aws_region }}"
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
-      register: taskdef
-
-    - name: Update ECS service
-      community.aws.ecs_service:
-        name: YOUR_SERVICE_NAME
-        cluster: YOUR_CLUSTER_NAME
-        task_definition: "{{ taskdef.taskdefinition.family }}"
-        desired_count: 1
-        aws_region: "{{ aws_region }}"
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
-        state: present
+    - name: Push the Docker image to ECR
+      shell: |
+        docker push {{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com/{{ ecr_repository_name }}:{{ image_tag }}
+      register: push_output
+      failed_when: push_output.rc != 0
