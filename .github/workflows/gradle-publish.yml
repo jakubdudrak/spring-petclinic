@@ -101,3 +101,4 @@ jobs:
         file: Dockerfile
         tags: jakubdudrak/spring-petclinic:latest
         push: true
+        load: false
