@@ -4,7 +4,7 @@
   tasks:
     - name: Login to Amazon ECR
       shell: |
-        aws ecr get-login-password --region {{ aws_region }} | docker login --username AWS --password-stdin {{ ecr_repository }}
+        aws ecr get-login-password --region {{ aws_region }} | docker login --username AWS --password-stdin public.ecr.aws/u7v5w7u1/pet-clinic
       args:
         executable: /bin/bash
 
