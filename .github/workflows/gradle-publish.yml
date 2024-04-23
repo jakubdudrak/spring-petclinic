@@ -199,7 +199,7 @@ jobs:
 
       - name: Register task definition
         run: |
-          aws ecs register-task-definition --cli-input-json file://task-definition.json
+          aws ecs register-task-definition --cli-input-json file://ecrtask.json
 
       - name: Deploy to ECS
         run: |
