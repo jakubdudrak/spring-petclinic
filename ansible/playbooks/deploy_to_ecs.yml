@@ -1,38 +1,30 @@
 ---
-- name: Deploy Docker image to Amazon ECR
+- name: Build and Deploy Docker Image to Amazon ECR Public
   hosts: localhost
   connection: local
   gather_facts: false
 
   vars:
-    aws_region: 'eu-north-1'
-    aws_account_id: '339712705537'
-    ecr_repository_name: 'pet-clinic'
+    aws_region: 'us-east-1'
+    ecr_repository: 'public.ecr.aws/u7v5w7u1/pet-clinic'
     image_name: 'pet-clinic'
     image_tag: 'latest'
 
   tasks:
-    - name: Create ECR repository if it does not exist
-      community.aws.ecr_repository:
-        name: "{{ ecr_repository_name }}"
-        region: "{{ aws_region }}"
-        state: present
-      register: ecr_repo
-
-    - name: Authenticate Docker to Amazon ECR
-      shell: |
-        aws ecr get-login-password --region {{ aws_region }} | docker login --username AWS --password-stdin {{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com
+    - name: Authenticate Docker to Amazon ECR Public
+      shell: aws ecr-public get-login-password --region {{ aws_region }} | docker login --username AWS --password-stdin {{ ecr_repository }}
       register: login_output
       failed_when: login_output.rc != 0
 
-    - name: Tag the Docker image for ECR
-      shell: |
-        docker tag {{ image_name }}:{{ image_tag }} {{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com/{{ ecr_repository_name }}:{{ image_tag }}
-      register: tag_output
-      failed_when: tag_output.rc != 0
+    - name: Build Docker image
+      shell: docker build -t {{ image_name }}:{{ image_tag }} .
+      args:
+        chdir: /Dockerfile
+      register: build_output
+      failed_when: build_output.rc != 0
 
-    - name: Push the Docker image to ECR
-      shell: |
-        docker push {{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com/{{ ecr_repository_name }}:{{ image_tag }}
-      register: push_output
-      failed_when: push_output.rc != 0
+    - name: Tag Docker image for ECR
+      shell: docker tag {{ image_name }}:{{ image_tag }} {{ ecr_repository }}:{{ image_tag }}
+
+    - name: Push Docker image to Amazon ECR Public
+      shell: docker push {{ ecr_repository }}:{{ image_tag }}
