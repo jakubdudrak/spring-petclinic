@@ -9,8 +9,15 @@
         state: present
 
     - name: Register ECS task definition
-      community.aws.ecs_taskdefinition:
+      community.aws.ecs_task_definition:
         family: my-task-family
+        task_role_arn: "arn:aws:iam::339712705537:role/POLICY_PET_CLINIC"
+        execution_role_arn: "arn:aws:iam::339712705537:role/ecsTaskExecutionRole"
+        network_mode: awsvpc
+        cpu: '256'
+        memory: '512'
+        requires_compatibilities:
+          - FARGATE
         containers:
           - name: pet-clinic
             image: 339712705537.dkr.ecr.eu-north-1.amazonaws.com/pet-clinic:latest
@@ -19,7 +26,6 @@
             essential: true
             portMappings:
               - containerPort: 8080
-                hostPort: 8080
             logConfiguration:
               logDriver: awslogs
               options:
@@ -27,7 +33,6 @@
                 awslogs-region: eu-north-1
                 awslogs-stream-prefix: my-app
         volumes: []
-        network_mode: bridge
         state: present
 
     - name: Ensure service exists
@@ -36,5 +41,12 @@
         cluster: petClinicCluster
         task_definition: my-task-family
         desired_count: 1
-        launch_type: EC2
+        launch_type: FARGATE
         state: present
+        network_configuration:
+          awsvpc_configuration:
+            subnets:
+              - subnet-09d7a2c4366d24b53
+            security_groups:
+              - sg-077c4ad5a1e723026
+            assign_public_ip: ENABLED
