@@ -11,7 +11,7 @@
         state: present
 
     - name: Register ECS task definition
-      community.aws.ecs_task_definition:
+      ecs_task_definition:
         family: my-task-family
         task_role_arn: "arn:aws:iam::339712705537:role/POLICY_PET_CLINIC"
         execution_role_arn: "arn:aws:iam::339712705537:role/ecsTaskExecutionRole"
@@ -34,7 +34,7 @@
                 awslogs-group: my-log-group
                 awslogs-region: eu-north-1
                 awslogs-stream-prefix: my-app
-        volumes: []
+        volumes: [ ]
         state: present
 
     - name: Ensure service exists
