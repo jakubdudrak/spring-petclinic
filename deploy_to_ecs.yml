@@ -1,5 +1,4 @@
 - name: Provision ECS resources
-  hosts: localhost
   gather_facts: false
   collections:
     - community.aws
