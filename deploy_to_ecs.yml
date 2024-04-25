@@ -9,6 +9,7 @@
       ecs_cluster:
         name: petClinicCluster
         state: present
+        purge_capacity_providers: true
 
     - name: Register ECS task definition
       community.aws.ecs_taskdefinition:
@@ -17,7 +18,8 @@
         network_mode: awsvpc
         cpu: '256'
         memory: '512'
-        launch_type: "FARGATE"
+        requires_compatibilities:
+          - "FARGATE"
         containers:
           - name: pet-clinic
             image: 339712705537.dkr.ecr.eu-north-1.amazonaws.com/pet-clinic:latest
