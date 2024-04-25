@@ -1,0 +1,40 @@
+---
+- name: Provision ECS resources
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Ensure ECS cluster exists
+      community.aws.ecs_cluster:
+        name: PetClinicCluster
+        state: present
+
+    - name: Register ECS task definition
+      community.aws.ecs_taskdefinition:
+        family: my-task-family
+        containers:
+          - name: my-container
+            image: 339712705537.dkr.ecr.eu-north-1.amazonaws.com/pet-clinic:latest
+            cpu: 256
+            memory: 512
+            essential: true
+            port_mappings:
+              - containerPort: 8080
+                hostPort: 8080
+            logConfiguration:
+              logDriver: awslogs
+              options:
+                awslogs-group: my-log-group
+                awslogs-region: eu-north-1
+                awslogs-stream-prefix: my-app
+        volumes: []
+        network_mode: bridge
+        state: present
+
+    - name: Ensure service exists
+      community.aws.ecs_service:
+        name: pet-clinic
+        cluster: PetClinicCluster
+        task_definition: my-task-family
+        desired_count: 1
+        launch_type: EC2
+        state: present
