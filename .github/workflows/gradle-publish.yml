@@ -179,4 +179,4 @@ jobs:
           aws-region: eu-north-1
 
       - name: Run Ansible playbook
-        run: ansible-playbook /ansible/playbooks/deploy_to_ecs.yml
+        run: ansible-playbook deploy_to_ecs.yml
