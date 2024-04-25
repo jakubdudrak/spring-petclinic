@@ -48,3 +48,4 @@
           security_groups:
             - sg-077c4ad5a1e723026
           assign_public_ip: true
+#
