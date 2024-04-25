@@ -1,15 +1,17 @@
----
 - name: Provision ECS resources
   hosts: localhost
   gather_facts: false
+  collections:
+    - community.aws
+
   tasks:
     - name: Ensure ECS cluster exists
-      community.aws.ecs_cluster:
+      ecs_cluster:
         name: petClinicCluster
         state: present
 
     - name: Register ECS task definition
-      community.aws.ecs_task_definition:
+      ecs_task_definition:
         family: my-task-family
         task_role_arn: "arn:aws:iam::339712705537:role/POLICY_PET_CLINIC"
         execution_role_arn: "arn:aws:iam::339712705537:role/ecsTaskExecutionRole"
@@ -36,7 +38,7 @@
         state: present
 
     - name: Ensure service exists
-      community.aws.ecs_service:
+      ecs_service:
         name: my-service
         cluster: petClinicCluster
         task_definition: my-task-family
