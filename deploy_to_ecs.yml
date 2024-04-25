@@ -1,4 +1,5 @@
 - name: Provision ECS resources
+  hosts: localhost
   gather_facts: false
   collections:
     - community.aws
@@ -12,13 +13,10 @@
     - name: Register ECS task definition
       community.aws.ecs_taskdefinition:
         family: my-task-family
-        task_role_arn: "arn:aws:iam::339712705537:role/POLICY_PET_CLINIC"
         execution_role_arn: "arn:aws:iam::339712705537:role/ecsTaskExecutionRole"
         network_mode: awsvpc
         cpu: '256'
         memory: '512'
-        requires_compatibilities:
-          - FARGATE
         containers:
           - name: pet-clinic
             image: 339712705537.dkr.ecr.eu-north-1.amazonaws.com/pet-clinic:latest
@@ -33,7 +31,6 @@
                 awslogs-group: my-log-group
                 awslogs-region: eu-north-1
                 awslogs-stream-prefix: my-app
-        volumes: [ ]
         state: present
 
     - name: Ensure service exists

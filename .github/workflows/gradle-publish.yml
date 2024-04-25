@@ -152,7 +152,6 @@ jobs:
             DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}  
             DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}  
   deploy:
-    needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
