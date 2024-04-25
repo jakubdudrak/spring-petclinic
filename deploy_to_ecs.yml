@@ -11,7 +11,7 @@
         state: present
 
     - name: Register ECS task definition
-      community.aws.ecs_task_definition:
+      community.aws.ecs_taskdefinition:
         family: my-task-family
         task_role_arn: "arn:aws:iam::339712705537:role/POLICY_PET_CLINIC"
         execution_role_arn: "arn:aws:iam::339712705537:role/ecsTaskExecutionRole"
