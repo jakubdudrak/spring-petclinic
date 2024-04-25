@@ -32,7 +32,7 @@
 
     - name: Ensure service exists
       community.aws.ecs_service:
-        name: pet-clinic
+        name: my-service
         cluster: petClinicCluster
         task_definition: my-task-family
         desired_count: 1
