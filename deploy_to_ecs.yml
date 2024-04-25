@@ -12,12 +12,12 @@
       community.aws.ecs_taskdefinition:
         family: my-task-family
         containers:
-          - name: my-container
+          - name: pet-clinic
             image: 339712705537.dkr.ecr.eu-north-1.amazonaws.com/pet-clinic:latest
             cpu: 256
             memory: 512
             essential: true
-            port_mappings:
+            portMappings:
               - containerPort: 8080
                 hostPort: 8080
             logConfiguration:
