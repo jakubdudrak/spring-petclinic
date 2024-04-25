@@ -1,4 +1,4 @@
-FROM openjdk:11-jre-slim
+FROM openjdk:17
 WORKDIR /usr/src/app
 COPY build/libs/spring-petclinic-3.2.0.jar /usr/src/app/spring-petclinic-3.2.0.jar
 EXPOSE 8080
