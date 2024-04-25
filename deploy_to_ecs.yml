@@ -42,9 +42,8 @@
         launch_type: FARGATE
         state: present
         network_configuration:
-          awsvpc_configuration:
-            subnets:
-              - subnet-09d7a2c4366d24b53
-            security_groups:
-              - sg-077c4ad5a1e723026
-            assign_public_ip: ENABLED
+          subnets:
+            - subnet-09d7a2c4366d24b53
+          security_groups:
+            - sg-077c4ad5a1e723026
+          assign_public_ip: ENABLED
