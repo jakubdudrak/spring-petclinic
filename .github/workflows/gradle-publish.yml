@@ -57,8 +57,11 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+      - name: XML generation
+        run: ./gradlew test
+
       - name: Run SonarQube analysis
-        run: ./gradlew sonarqube
+        run: ./gradlew sonarqube --stacktrace
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -75,9 +78,6 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt'
-
-    - name: XML generation
-      run: ./gradlew test
 
     - name: Run bootJar
       run: ./gradlew bootJar
