@@ -76,6 +76,9 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
+    - name: XML generation
+      run: ./gradlew test
+
     - name: Run bootJar
       run: ./gradlew bootJar
       
